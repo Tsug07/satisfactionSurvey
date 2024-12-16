@@ -9,7 +9,7 @@ function Header() {
                 alt="Logo"
                 style={styles.logo}
             />
-            <p style={styles.text}><strong>Ajude-nos a melhorar! Deixe aqui sua avaliação de nossos Serviços</strong></p>
+            <p style={styles.text}><strong>Ajude-nos a melhorar! Deixe aqui sua avaliação sobre nossos Serviços</strong></p>
         </header>
     );
 }

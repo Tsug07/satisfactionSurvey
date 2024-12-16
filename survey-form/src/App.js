@@ -1,12 +1,18 @@
-import React, { useState } from "react";
-import EmojiRating from "./EmojiRating"; // Certifique-se de que está importando corretamente
-import emailjs from "emailjs-com"; // Instale com: npm install emailjs-com
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import EmojiRating from "./EmojiRating";
+import emailjs from "emailjs-com";
+import Thanks from "./Thanks"; // Importa a página de agradecimento
+
 
 function App() {
     const [feedback1, setFeedback1] = useState("");
     const [feedback2, setFeedback2] = useState("");
     const [ratings, setRatings] = useState({}); // Estado para armazenar as avaliações
-
+    const navigate = useNavigate(); // Hook para navegar entre as páginas
+    useEffect(() => {
+        document.title = "Pesquisa de Satisfação - Canella & Santos"; // Define o título da página inicial
+    }, []);
     const handleRatingChange = (title, rating) => {
         setRatings((prev) => ({
             ...prev,
@@ -42,7 +48,8 @@ function App() {
             )
             .then(
                 () => {
-                    alert("Respostas enviadas com sucesso!");
+                     // Redireciona para a página de agradecimento
+                     navigate("/thanks");
                 },
                 (error) => {
                     alert("Erro ao enviar respostas. Tente novamente.");
@@ -159,4 +166,16 @@ const submitButtonStyle = {
     cursor: "pointer",
 };
 
-export default App;
+
+function MainApp() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/thanks" element={<Thanks />} />
+            </Routes>
+        </Router>
+    );
+}
+
+export default MainApp;
