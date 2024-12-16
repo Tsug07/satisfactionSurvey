@@ -1,0 +1,13 @@
+.header {
+    background-color: "#F7E9EC";
+    display: "flex";
+    justify-content: "center";
+    align-items: "center";
+    height: "100px"; 
+    position: "sticky";
+}
+
+.logo {
+    max-width: "300px";
+    height: "auto";  
+}
