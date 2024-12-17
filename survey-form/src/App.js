@@ -165,7 +165,7 @@ function App() {
         };
         try {
             // 1. Envia os dados para o backend
-            const response = await fetch("/api/server", {
+            const response = await fetch("/api/feedback", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

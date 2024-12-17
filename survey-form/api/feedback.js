@@ -8,7 +8,7 @@ const dbConfig = {
     database: process.env.DB_DATABASE,
     port: parseInt(process.env.DB_PORT) || 1433,
     options: {
-        encrypt: true, // Azure ou conexões seguras
+        encrypt: false, // Azure ou conexões seguras
         trustServerCertificate: true, // Para conexões locais
     },
 };
