@@ -165,7 +165,7 @@ function App() {
         };
         try {
             // 1. Envia os dados para o backend
-            const response = await fetch("/api/feedback", {
+            const response = await fetch("https://api-feedback-y5d9.onrender.com", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
