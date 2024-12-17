@@ -1,10 +1,10 @@
 import React from "react";
 
 function EmojiRating({ title, currentRating, onRatingChange }) {
-    const emojis = ["😡", "😟", "😐", "😊", "😁"]; // Emojis representando 1-5
+    const emojis = ["😡", "😟", "😐", "😊", "😁"];
 
     const handleRating = (index) => {
-        onRatingChange(title, index + 1); // Atualiza o valor da avaliação no pai
+        onRatingChange(title, index + 1);
     };
 
     return (
@@ -20,7 +20,7 @@ function EmojiRating({ title, currentRating, onRatingChange }) {
                             backgroundColor: currentRating === index + 1 ? "#4caf50" : "#f0f0f0",
                         }}
                     >
-                        {emoji}
+                        <span style={styles.emojiText}>{emoji}</span>
                     </button>
                 ))}
             </div>
@@ -33,31 +33,110 @@ function EmojiRating({ title, currentRating, onRatingChange }) {
 
 const styles = {
     container: {
-        margin: "20px auto",
+        margin: "15px auto",
         textAlign: "center",
+        padding: "0 10px",
+        "@media (max-width: 425px)": {
+            margin: "12px auto",
+            padding: "0 5px",
+        },
+        "@media (max-width: 375px)": {
+            margin: "10px auto",
+        },
+        "@media (max-width: 320px)": {
+            margin: "8px auto",
+        }
     },
     title: {
-        fontSize: "1.5rem",
+        fontSize: "1.2rem",
         marginBottom: "10px",
+        fontWeight: "normal",
+        padding: "0 5px",
+        "@media (max-width: 425px)": {
+            fontSize: "1.1rem",
+            marginBottom: "8px",
+        },
+        "@media (max-width: 375px)": {
+            fontSize: "1rem",
+            marginBottom: "6px",
+        },
+        "@media (max-width: 320px)": {
+            fontSize: "0.9rem",
+            marginBottom: "5px",
+        }
     },
     emojiContainer: {
         display: "flex",
         justifyContent: "center",
-        gap: "10px",
+        gap: "8px",
+        flexWrap: "wrap",
+        "@media (max-width: 425px)": {
+            gap: "6px",
+        },
+        "@media (max-width: 375px)": {
+            gap: "4px",
+        },
+        "@media (max-width: 320px)": {
+            gap: "3px",
+        }
     },
     emojiButton: {
-        fontSize: "2rem",
+        fontSize: "1.8rem",
         backgroundColor: "#f0f0f0",
         border: "none",
         cursor: "pointer",
         borderRadius: "50%",
-        width: "60px",
-        height: "60px",
+        width: "50px",
+        height: "50px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 0,
+        transition: "transform 0.2s, background-color 0.2s",
+        "@media (max-width: 425px)": {
+            width: "45px",
+            height: "45px",
+            fontSize: "1.6rem",
+        },
+        "@media (max-width: 375px)": {
+            width: "40px",
+            height: "40px",
+            fontSize: "1.4rem",
+        },
+        "@media (max-width: 320px)": {
+            width: "35px",
+            height: "35px",
+            fontSize: "1.2rem",
+        },
+        ":hover": {
+            transform: "scale(1.1)",
+        },
+        ":active": {
+            transform: "scale(0.95)",
+        }
+    },
+    emojiText: {
+        lineHeight: 1,
+        display: "block",
+        transform: "translateY(1px)", // Ajuste fino para centralização vertical
     },
     feedback: {
-        marginTop: "10px",
-        fontSize: "1rem",
-    },
+        marginTop: "8px",
+        fontSize: "0.9rem",
+        color: "#666",
+        "@media (max-width: 425px)": {
+            fontSize: "0.85rem",
+            marginTop: "6px",
+        },
+        "@media (max-width: 375px)": {
+            fontSize: "0.8rem",
+            marginTop: "5px",
+        },
+        "@media (max-width: 320px)": {
+            fontSize: "0.75rem",
+            marginTop: "4px",
+        }
+    }
 };
 
 export default EmojiRating;
