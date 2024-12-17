@@ -134,7 +134,7 @@ function App() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const emailContent = {
@@ -150,23 +150,47 @@ function App() {
             feedback1: feedback1 || "Nenhum feedback fornecido.",
             feedback2: feedback2 || "Nenhum feedback fornecido.",
         };
-
-        emailjs
-            .send(
-                "service_mp1or57",
-                "template_2mhlnrm",
-                emailContent,
-                "o0sumI06EDLRXZoOe"
-            )
-            .then(
-                () => {
-                    navigate("/thanks");
+        const emailContentSql = {
+            // Convertendo os valores das avaliações para inteiros ou null
+            tempo_entrega: parseInt(ratings["Tempo de Entrega dos Serviços"], 10) || null,
+            qualidade_entregas: parseInt(ratings["Qualidade das Entregas"], 10) || null,
+            tempo_resposta: parseInt(ratings["Tempo de Resposta"], 10) || null,
+            qualidade_atendimento: parseInt(ratings["Qualidade do Atendimento"], 10) || null,
+            relacionamento: parseInt(ratings["Como Avalia Nosso Relacionamento"], 10) || null,
+            servicos_valor: parseInt(ratings["Nossos Serviços Agregam Valor ao Seu Negócio"], 10) || null,
+        
+            // Os feedbacks podem ser texto
+            feedback1: feedback1 || null,
+            feedback2: feedback2 || null,
+        };
+        try {
+            // 1. Envia os dados para o backend
+            const response = await fetch("/api/server", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-                (error) => {
-                    alert("Erro ao enviar respostas. Tente novamente.");
-                    console.error(error);
-                }
+                body: JSON.stringify(emailContentSql),
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao enviar os dados para o banco de dados.");
+            }
+
+            // 2. Envia o email via EmailJS
+            await emailjs.send(
+                "service_mp1or57", // Substitua pelo seu ID do serviço
+                "template_2mhlnrm", // Substitua pelo ID do template
+                emailContent,
+                "o0sumI06EDLRXZoOe" // Substitua pelo ID do usuário
             );
+
+            // 3. Redireciona para a página de agradecimento
+            navigate("/thanks");
+        } catch (error) {
+            console.error("Erro durante o envio:", error);
+            alert("Erro ao enviar os dados. Tente novamente mais tarde.");
+        }
     };
 
     return (
