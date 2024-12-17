@@ -1,4 +1,127 @@
 import React from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  margin: 15px auto;
+  text-align: center;
+  padding: 0 10px;
+
+  @media (max-width: 425px) {
+    margin: 12px auto;
+    padding: 0 5px;
+  }
+
+  @media (max-width: 375px) {
+    margin: 10px auto;
+  }
+
+  @media (max-width: 320px) {
+    margin: 8px auto;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: normal;
+  padding: 0 5px;
+
+  @media (max-width: 425px) {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 320px) {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+`;
+
+const EmojiGrid = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  @media (max-width: 425px) {
+    gap: 6px;
+  }
+
+  @media (max-width: 375px) {
+    gap: 4px;
+  }
+
+  @media (max-width: 320px) {
+    gap: 3px;
+  }
+`;
+
+const EmojiButton = styled.button`
+  font-size: 1.8rem;
+  background-color: ${props => props.selected ? "#4caf50" : "#f0f0f0"};
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: 425px) {
+    width: 45px;
+    height: 45px;
+    font-size: 1.6rem;
+  }
+
+  @media (max-width: 375px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 320px) {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+`;
+
+const Feedback = styled.p`
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #666;
+
+  @media (max-width: 425px) {
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+
+  @media (max-width: 320px) {
+    font-size: 0.75rem;
+    margin-top: 4px;
+  }
+`;
 
 function EmojiRating({ title, currentRating, onRatingChange }) {
     const emojis = ["😡", "😟", "😐", "😊", "😁"];
@@ -8,135 +131,24 @@ function EmojiRating({ title, currentRating, onRatingChange }) {
     };
 
     return (
-        <div style={styles.container}>
-            <h2 style={styles.title}>{title}</h2>
-            <div style={styles.emojiContainer}>
+        <Container>
+            <Title>{title}</Title>
+            <EmojiGrid>
                 {emojis.map((emoji, index) => (
-                    <button
+                    <EmojiButton
                         key={index}
                         onClick={() => handleRating(index)}
-                        style={{
-                            ...styles.emojiButton,
-                            backgroundColor: currentRating === index + 1 ? "#4caf50" : "#f0f0f0",
-                        }}
+                        selected={currentRating === index + 1}
                     >
-                        <span style={styles.emojiText}>{emoji}</span>
-                    </button>
+                        {emoji}
+                    </EmojiButton>
                 ))}
-            </div>
-            <p style={styles.feedback}>
+            </EmojiGrid>
+            <Feedback>
                 Sua avaliação: {currentRating ? `${currentRating}/5` : "Ainda não avaliado"}
-            </p>
-        </div>
+            </Feedback>
+        </Container>
     );
 }
-
-const styles = {
-    container: {
-        margin: "15px auto",
-        textAlign: "center",
-        padding: "0 10px",
-        "@media (max-width: 425px)": {
-            margin: "12px auto",
-            padding: "0 5px",
-        },
-        "@media (max-width: 375px)": {
-            margin: "10px auto",
-        },
-        "@media (max-width: 320px)": {
-            margin: "8px auto",
-        }
-    },
-    title: {
-        fontSize: "1.2rem",
-        marginBottom: "10px",
-        fontWeight: "normal",
-        padding: "0 5px",
-        "@media (max-width: 425px)": {
-            fontSize: "1.1rem",
-            marginBottom: "8px",
-        },
-        "@media (max-width: 375px)": {
-            fontSize: "1rem",
-            marginBottom: "6px",
-        },
-        "@media (max-width: 320px)": {
-            fontSize: "0.9rem",
-            marginBottom: "5px",
-        }
-    },
-    emojiContainer: {
-        display: "flex",
-        justifyContent: "center",
-        gap: "8px",
-        flexWrap: "wrap",
-        "@media (max-width: 425px)": {
-            gap: "6px",
-        },
-        "@media (max-width: 375px)": {
-            gap: "4px",
-        },
-        "@media (max-width: 320px)": {
-            gap: "3px",
-        }
-    },
-    emojiButton: {
-        fontSize: "1.8rem",
-        backgroundColor: "#f0f0f0",
-        border: "none",
-        cursor: "pointer",
-        borderRadius: "50%",
-        width: "50px",
-        height: "50px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 0,
-        transition: "transform 0.2s, background-color 0.2s",
-        "@media (max-width: 425px)": {
-            width: "45px",
-            height: "45px",
-            fontSize: "1.6rem",
-        },
-        "@media (max-width: 375px)": {
-            width: "40px",
-            height: "40px",
-            fontSize: "1.4rem",
-        },
-        "@media (max-width: 320px)": {
-            width: "35px",
-            height: "35px",
-            fontSize: "1.2rem",
-        },
-        ":hover": {
-            transform: "scale(1.1)",
-        },
-        ":active": {
-            transform: "scale(0.95)",
-        }
-    },
-    emojiText: {
-        lineHeight: 1,
-        display: "block",
-        transform: "translateY(1px)", // Ajuste fino para centralização vertical
-    },
-    feedback: {
-        marginTop: "8px",
-        fontSize: "0.9rem",
-        color: "#666",
-        "@media (max-width: 425px)": {
-            fontSize: "0.85rem",
-            marginTop: "6px",
-        },
-        "@media (max-width: 375px)": {
-            fontSize: "0.8rem",
-            marginTop: "5px",
-        },
-        "@media (max-width: 320px)": {
-            fontSize: "0.75rem",
-            marginTop: "4px",
-        }
-    }
-};
 
 export default EmojiRating;
