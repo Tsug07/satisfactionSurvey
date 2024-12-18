@@ -156,37 +156,35 @@ function App() {
       console.log("Dados formatados para envio:", dbData);
   
       try {
-          // URL da API no Vercel
-          const apiUrl = 'https://satisfaction-survey-delta.vercel.app/api/feedback'; // Substitua pelo seu domínio no Vercel
-  
-          // Log da requisição
-          console.log("Enviando requisição para:", apiUrl);
-          console.log("Dados da requisição:", JSON.stringify(dbData));
-  
-          const response = await fetch(apiUrl, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  "Accept": "application/json"
-              },
-              mode: 'cors', // Explicitamente definindo o modo
-            credentials: 'include', // Incluir credenciais se necessário
-              body: JSON.stringify(dbData)
-          });
-  
-          // Log da resposta
-          console.log("Status da resposta:", response.status);
-          console.log("Headers da resposta:", Object.fromEntries(response.headers));
-  
-          if (!response.ok) {
-              // Tenta ler o corpo da resposta
-              const errorText = await response.text();
-            console.error("Resposta de erro:", errorText);
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-  
-          const responseData = await response.json();
-          console.log("Sucesso:", responseData);
+        console.log("Enviando dados:", dbData);
+
+        const response = await fetch('https://satisfaction-survey-delta.vercel.app/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dbData)
+        });
+
+        // Log da resposta
+        console.log("Status da resposta:", response.status);
+        
+        const responseText = await response.text();
+        console.log("Resposta completa:", responseText);
+
+        let responseData;
+        try {
+            responseData = JSON.parse(responseText);
+        } catch (e) {
+            throw new Error(`Resposta inválida do servidor: ${responseText}`);
+        }
+
+        if (!response.ok) {
+            throw new Error(responseData.error || `Erro do servidor: ${response.status}`);
+        }
+
+        // Se chegou aqui, os dados foram salvos com sucesso
+        console.log("Sucesso:", responseData);
   
           // Se chegou até aqui, os dados foram salvos com sucesso
           // Agora envia o email
