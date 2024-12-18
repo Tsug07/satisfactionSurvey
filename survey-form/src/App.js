@@ -155,36 +155,36 @@ function App() {
       // Log dos dados formatados
       console.log("Dados formatados para envio:", dbData);
   
-      try {
-        console.log("Enviando dados:", dbData);
+      // try {
+      //   console.log("Enviando dados:", dbData);
 
-        const response = await fetch('https://satisfaction-survey-delta.vercel.app/api/feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dbData)
-        });
+      //   const response = await fetch('https://satisfaction-survey-delta.vercel.app/api/feedback', {
+      //       method: 'POST',
+      //       headers: {
+      //           'Content-Type': 'application/json'
+      //       },
+      //       body: JSON.stringify(dbData)
+      //   });
 
-        // Log da resposta
-        console.log("Status da resposta:", response.status);
+      //   // Log da resposta
+      //   console.log("Status da resposta:", response.status);
         
-        const responseText = await response.text();
-        console.log("Resposta completa:", responseText);
+      //   const responseText = await response.text();
+      //   console.log("Resposta completa:", responseText);
 
-        let responseData;
-        try {
-            responseData = JSON.parse(responseText);
-        } catch (e) {
-            throw new Error(`Resposta inválida do servidor: ${responseText}`);
-        }
+      //   let responseData;
+      //   try {
+      //       responseData = JSON.parse(responseText);
+      //   } catch (e) {
+      //       throw new Error(`Resposta inválida do servidor: ${responseText}`);
+      //   }
 
-        if (!response.ok) {
-            throw new Error(responseData.error || `Erro do servidor: ${response.status}`);
-        }
+      //   if (!response.ok) {
+      //       throw new Error(responseData.error || `Erro do servidor: ${response.status}`);
+      //   }
 
-        // Se chegou aqui, os dados foram salvos com sucesso
-        console.log("Sucesso:", responseData);
+      //   // Se chegou aqui, os dados foram salvos com sucesso
+      //   console.log("Sucesso:", responseData);
   
           // Se chegou até aqui, os dados foram salvos com sucesso
           // Agora envia o email
@@ -212,10 +212,10 @@ function App() {
           // Redireciona para a página de agradecimento
           navigate("/thanks");
   
-      } catch (error) {
-          console.error("Erro detalhado:", error);
-          alert(`Erro ao enviar os dados: ${error.message}`);
-      }
+      // } catch (error) {
+      //     console.error("Erro detalhado:", error);
+      //     alert(`Erro ao enviar os dados: ${error.message}`);
+      // }
   };
 
     return (
