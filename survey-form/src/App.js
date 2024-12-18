@@ -135,63 +135,90 @@ function App() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const emailContent = {
-            subject: "Pesquisa de Satisfação - Respostas do Cliente",
-            to_name: "Equipe Canella & Santos",
-            from_name: "Pesquisa de Satisfação",
-            tempo_entrega: ratings["Tempo de Entrega dos Serviços"] || "Não avaliado",
-            qualidade_entregas: ratings["Qualidade das Entregas"] || "Não avaliado",
-            tempo_resposta: ratings["Tempo de Resposta"] || "Não avaliado",
-            qualidade_atendimento: ratings["Qualidade do Atendimento"] || "Não avaliado",
-            relacionamento: ratings["Como Avalia Nosso Relacionamento"] || "Não avaliado",
-            servicos_valor: ratings["Nossos Serviços Agregam Valor ao Seu Negócio"] || "Não avaliado",
-            feedback1: feedback1 || "Nenhum feedback fornecido.",
-            feedback2: feedback2 || "Nenhum feedback fornecido.",
-        };
-        const emailContentSql = {
-            // Convertendo os valores das avaliações para inteiros ou null
-            tempo_entrega: parseInt(ratings["Tempo de Entrega dos Serviços"], 10) || null,
-            qualidade_entregas: parseInt(ratings["Qualidade das Entregas"], 10) || null,
-            tempo_resposta: parseInt(ratings["Tempo de Resposta"], 10) || null,
-            qualidade_atendimento: parseInt(ratings["Qualidade do Atendimento"], 10) || null,
-            relacionamento: parseInt(ratings["Como Avalia Nosso Relacionamento"], 10) || null,
-            servicos_valor: parseInt(ratings["Nossos Serviços Agregam Valor ao Seu Negócio"], 10) || null,
-        
-            // Os feedbacks podem ser texto
-            feedback1: feedback1 || null,
-            feedback2: feedback2 || null,
-        };
-        try {
-            // // 1. Envia os dados para o backend
-            // const response = await fetch("https://api-feedback-y5d9.onrender.com", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify(emailContentSql),
-            // });
-
-            // if (!response.ok) {
-            //     throw new Error("Erro ao enviar os dados para o banco de dados.");
-            // }
-
-            // 2. Envia o email via EmailJS
-            await emailjs.send(
-                "service_mp1or57", // Substitua pelo seu ID do serviço
-                "template_2mhlnrm", // Substitua pelo ID do template
-                emailContent,
-                "o0sumI06EDLRXZoOe" // Substitua pelo ID do usuário
-            );
-
-            // 3. Redireciona para a página de agradecimento
-            navigate("/thanks");
-        } catch (error) {
-            console.error("Erro durante o envio:", error);
-            alert("Erro ao enviar os dados. Tente novamente mais tarde.");
-        }
-    };
+      e.preventDefault();
+  
+      // Log dos dados antes de formatar
+      console.log("Ratings originais:", ratings);
+  
+      // Formatar dados para o banco de dados
+      const dbData = {
+          tempo_de_entrega: Number(ratings["Tempo de Entrega dos Serviços"]) || 0,
+          qualidade_da_entrega: Number(ratings["Qualidade das Entregas"]) || 0,
+          tempo_de_resposta: Number(ratings["Tempo de Resposta"]) || 0,
+          qualidade_do_atendimento: Number(ratings["Qualidade do Atendimento"]) || 0,
+          nosso_relacionamento: Number(ratings["Como Avalia Nosso Relacionamento"]) || 0,
+          agregar_valor: Number(ratings["Nossos Serviços Agregam Valor ao Seu Negócio"]) || 0,
+          palavra: String(feedback1 || "").trim(),
+          observacoes: String(feedback2 || "").trim()
+      };
+  
+      // Log dos dados formatados
+      console.log("Dados formatados para envio:", dbData);
+  
+      try {
+          // URL da API no Vercel
+          const apiUrl = 'https://satisfaction-survey-delta.vercel.app/api/feedback'; // Substitua pelo seu domínio no Vercel
+  
+          // Log da requisição
+          console.log("Enviando requisição para:", apiUrl);
+          console.log("Dados da requisição:", JSON.stringify(dbData));
+  
+          const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json"
+              },
+              mode: 'cors', // Explicitamente definindo o modo
+            credentials: 'include', // Incluir credenciais se necessário
+              body: JSON.stringify(dbData)
+          });
+  
+          // Log da resposta
+          console.log("Status da resposta:", response.status);
+          console.log("Headers da resposta:", Object.fromEntries(response.headers));
+  
+          if (!response.ok) {
+              // Tenta ler o corpo da resposta
+              const errorText = await response.text();
+            console.error("Resposta de erro:", errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+  
+          const responseData = await response.json();
+          console.log("Sucesso:", responseData);
+  
+          // Se chegou até aqui, os dados foram salvos com sucesso
+          // Agora envia o email
+          const emailContent = {
+              subject: "Pesquisa de Satisfação - Respostas do Cliente",
+              to_name: "Equipe Canella & Santos",
+              from_name: "Pesquisa de Satisfação",
+              tempo_entrega: `${dbData.tempo_de_entrega}`|| "Nenhum feedback fornecido.",
+              qualidade_entregas: `${dbData.qualidade_da_entrega}`|| "Nenhum feedback fornecido.",
+              tempo_resposta: `${dbData.tempo_de_resposta}`|| "Nenhum feedback fornecido.",
+              qualidade_atendimento: `${dbData.qualidade_do_atendimento}`|| "Nenhum feedback fornecido.",
+              relacionamento: `${dbData.nosso_relacionamento}`|| "Nenhum feedback fornecido.",
+              servicos_valor: `${dbData.agregar_valor}`|| "Nenhum feedback fornecido.",
+              feedback1: dbData.palavra || "Nenhum feedback fornecido.",
+              feedback2: dbData.observacoes || "Nenhum feedback fornecido."
+          };
+  
+          await emailjs.send(
+              "service_mp1or57",
+              "template_2mhlnrm",
+              emailContent,
+              "o0sumI06EDLRXZoOe"
+          );
+  
+          // Redireciona para a página de agradecimento
+          navigate("/thanks");
+  
+      } catch (error) {
+          console.error("Erro detalhado:", error);
+          alert(`Erro ao enviar os dados: ${error.message}`);
+      }
+  };
 
     return (
         <div style={styles.container}>
